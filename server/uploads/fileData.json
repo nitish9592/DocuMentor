@@ -1,0 +1,37 @@
+[
+  {
+    "originalName": "CP ASSIGNMENT 8.pdf",
+    "serverName": "1751461960731_CP ASSIGNMENT 8.pdf",
+    "path": "C:\\vscode\\myprojects\\DocuMentor\\server\\uploads\\1751461960731_CP ASSIGNMENT 8.pdf",
+    "uploadedAt": "2025-07-02T13:12:40.789Z",
+    "summary": "CPASSIGNMENT:8 NAME :NITISH KUMAR ROLLNO:22104074  Q1 To check if the string is palidrome #include<stdio. h> #include<string. h> int main() { char s[100]; printf(\"Enter the string\"); gets(s); int n=strlen(s); char x[100]; int j=0; while(j<n){ x[j]=s[j]; j++; } int i=0; while(i<n/2) { char t=s[i]; s[i]=s[n-i-1]; s[n-i-1]=t; i++; }  i=0; int c=0; while(i<n) { if(x[i]!"
+  },
+  {
+    "originalName": "Recruitment of Specialist Cadre Officers on Regular Basis (Advertisement No_ CRPD_SCO_2024-25_15).pdf",
+    "serverName": "1751461968594_Recruitment of Specialist Cadre Officers on Regular Basis (Advertisement No_ CRPD_SCO_2024-25_15).pdf",
+    "path": "C:\\vscode\\myprojects\\DocuMentor\\server\\uploads\\1751461968594_Recruitment of Specialist Cadre Officers on Regular Basis (Advertisement No_ CRPD_SCO_2024-25_15).pdf",
+    "uploadedAt": "2025-07-02T13:12:48.678Z",
+    "summary": "Registration Number:2410009919 Full Name:HIMANI Post:Assistant Manager (System) JMGS-I Category:SC Sub Caste:megh Are you a person with benchmark disability of 40% and above ?  :NO Type of Disability:- Are you suffering from cerebral palsy and your writing speed is affected ?  :- If Yes, Do you need compensatory time at the time of examination ?"
+  },
+  {
+    "originalName": "typing.pdf",
+    "serverName": "1751462013361_typing.pdf",
+    "path": "C:\\vscode\\myprojects\\DocuMentor\\server\\uploads\\1751462013361_typing.pdf",
+    "uploadedAt": "2025-07-02T13:13:33.383Z",
+    "summary": "No summary available."
+  },
+  {
+    "originalName": "adhar card 150kb.pdf",
+    "serverName": "1751481912951_adhar card 150kb.pdf",
+    "path": "C:\\vscode\\myprojects\\DocuMentor\\server\\uploads\\1751481912951_adhar card 150kb.pdf",
+    "uploadedAt": "2025-07-02T18:45:13.187Z",
+    "summary": "No summary available."
+  },
+  {
+    "originalName": "adhar card 150kb.pdf",
+    "serverName": "1751517305110_adhar card 150kb.pdf",
+    "path": "C:\\vscode\\myprojects\\DocuMentor\\server\\uploads\\1751517305110_adhar card 150kb.pdf",
+    "uploadedAt": "2025-07-03T04:35:05.313Z",
+    "summary": "No summary available."
+  }
+]
