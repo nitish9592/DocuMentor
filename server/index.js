@@ -11,7 +11,7 @@ const app = express();
 const PORT = 5000;
 
 app.use(cors());
-app.use(express.static("uploads"));
+
 app.use(express.json());
 
 const uploadFolder = path.join(__dirname, "uploads");

@@ -196,10 +196,11 @@ function FileUploader() {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-4 rounded-lg shadow-lg max-w-3xl w-full relative">
               <button
+              
                 onClick={() => setPreviewFile(null)}
                 className="absolute top-2 right-3 text-red-600 font-bold text-lg"
               >
-                
+              &times;
               </button>
               <iframe
                 src={`http://localhost:5000/${previewFile}`}
