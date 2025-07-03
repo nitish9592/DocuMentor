@@ -118,6 +118,19 @@ app.get("/download/:serverName", (req, res) => {
   // Force download with original name
   res.download(filePath, file.originalName);
 });
+//route for previewing
+app.get('/preview/:serverName', (req, res) => {
+  const serverName = req.params.serverName;
+  const filePath = path.join(uploadFolder, serverName);
+
+  // Validate existence
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).send("File not found");
+  }
+
+  res.sendFile(filePath);
+});
+
 
 // Delete file and its metadata
 app.delete("/upload/:filename", (req, res) => {

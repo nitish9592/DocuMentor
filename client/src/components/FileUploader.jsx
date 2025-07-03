@@ -194,7 +194,7 @@ function FileUploader() {
               &times;
               </button>
               <iframe
-                src={`http://localhost:5000/${previewFile}`}
+                src={`http://localhost:5000/preview/${previewFile}`}
                 title="PDF Preview"
                 className="w-full h-[500px] border"
               />
