@@ -65,32 +65,24 @@ function FileUploader() {
     }
   };
 
-
-  const removeFile = async (index) => {
-    const filename = files[index].serverName;
-
+  const removeFile = async (serverName) => {
     try {
-      const res = await fetch(`http://localhost:5000/upload/${encodeURIComponent(filename)}`, {
+      const res = await fetch(`http://localhost:5000/upload/${encodeURIComponent(serverName)}`, {
         method: "DELETE",
       });
       if (res.ok) {
-        const updatedFiles = [...files];
-        updatedFiles.splice(index, 1);
-        setFiles(updatedFiles);
+        setFiles((prev) => prev.filter((file) => file.serverName !== serverName));
         toast.success("File deleted successfully");
-        console.log("Deleted:", filename);
       } else {
         const msg = await res.text();
         toast.error("Failed to delete file: " + msg);
-        console.error("Delete failed:", msg);
       }
     } 
     catch (err) {
-      console.error("Delete error:", err);
       toast.error("Error deleting file: " + err.message);
     }
   };
-  
+
   const toggleSummary = (index) => {
   setExpanded(prev => ({ ...prev, [index]: !prev[index] }));
   };
@@ -142,7 +134,7 @@ function FileUploader() {
                       Uploaded: {new Date(file.uploadedAt).toLocaleString()}
                     </span>
                     <button
-                      onClick={() => removeFile(index)}
+                      onClick={() => removeFile(file.serverName)}
                       className="text-red-500 hover:underline text-sm"
                     >
                       Remove
@@ -150,8 +142,7 @@ function FileUploader() {
                   
 
                     <a
-                      href={`http://localhost:5000/${file.serverName}`}
-                      download={file.originalName}
+                      href={`http://localhost:5000/download/${file.serverName}`}
                       className="text-blue-500 hover:underline text-sm"
                     >
                       ⬇️ Download
