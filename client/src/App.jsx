@@ -1,7 +1,8 @@
-import FileUploader from "./components/FileUploader";
+import FileUploader from "./components/FileUploader/FileUploader";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './index.css';  // or './App.css'
+import "./styles/index.css";
+ // or './App.css'
 
 
 
