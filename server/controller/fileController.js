@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import pdfParse from "pdf-parse";
-import OpenAI from "openai";
+import axios from "axios";
 import { fileURLToPath } from "url";
 import { readFiles, writeFiles } from "../utils/jsonStorage.js";
 
@@ -10,7 +10,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const uploadsDir = path.join(__dirname, "../uploads");
-const openai = new OpenAI({ apiKey: "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" });
+
+// Hugging Face API Key (from .env or hardcoded for now)
+const HF_API_KEY = "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";
+const HF_SUMMARIZATION_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn";
 
 // ✅ Upload + Summarize PDF
 export async function uploadFile(req, res) {
@@ -21,7 +24,7 @@ export async function uploadFile(req, res) {
   const filePath = path.join(uploadsDir, req.file.filename);
   const pdfBuffer = fs.readFileSync(filePath);
   const pdfData = await pdfParse(pdfBuffer);
-  const text = pdfData.text.slice(0, 2000);  // Limit text size for AI
+  const text = pdfData.text.slice(0, 2000);  // Limit text size
 
   const aiSummary = await getAISummary(text);
 
@@ -39,19 +42,24 @@ export async function uploadFile(req, res) {
   res.json(fileInfo);
 }
 
-// ✅ Generate AI Summary
+// ✅ Generate AI Summary using Hugging Face
 async function getAISummary(text) {
   try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        { role: "system", content: "You are a helpful assistant that summarizes PDF content." },
-        { role: "user", content: `Summarize this text:\n\n${text}` },
-      ],
-    });
-    return response.choices[0].message.content.trim();
+    const response = await axios.post(
+      HF_SUMMARIZATION_URL,
+      { inputs: text },
+      {
+        headers: {
+          Authorization: `Bearer ${HF_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log("Summarizing text:", text);
+    console.log("AI Summary Response:", response.data);
+    return response.data[0]?.summary_text || "Summary not available.";
   } catch (err) {
-    console.error("AI Summary Error:", err);
+    console.error("AI Summary Error:", err.response?.data || err.message);
     return "Failed to generate summary.";
   }
 }
