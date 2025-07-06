@@ -1,14 +1,22 @@
-const express = require("express");
+import express from "express";
+import { protect } from "../middleware/authMiddleware.js";
+import multerConfig from "../middleware/multerConfig.js";
+import {
+  uploadFile,
+  fetchFiles,
+  deleteFile,
+  downloadFile,
+  previewFile,
+} from "../controller/fileController.js";
+
 const router = express.Router();
-const fileController = require("../controllers/fileController");
 
-// Upload route with multer middleware
-router.post("/upload", fileController.upload.single("pdf"), fileController.uploadFile);
+router.use(protect);  // Protect all file routes
 
-// Other routes
-router.get("/", fileController.listFiles);
-router.get("/download/:serverName", fileController.downloadFile);
-router.get("/preview/:serverName", fileController.previewFile);
-router.delete("/upload/:filename", fileController.deleteFile);
+router.get("/", fetchFiles);
+router.post("/upload", multerConfig.single("pdf"), uploadFile);
+router.delete("/:file", deleteFile);
+router.get("/download/:file", downloadFile);
+router.get("/preview/:file", previewFile);
 
-module.exports = router;
+export default router;

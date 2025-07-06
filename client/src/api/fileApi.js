@@ -1,39 +1,45 @@
-// src/api/fileApi.js
+import axios from "axios";
+
 const BASE_URL = "http://localhost:5000/api/files";
 
-// Fetch all uploaded files
+function getAuthHeader() {
+  const token = localStorage.getItem("token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
 export async function fetchFiles() {
-  const res = await fetch(`${BASE_URL}/`);
-  if (!res.ok) throw new Error("Failed to fetch files");
-  return res.json();
+  const res = await axios.get(BASE_URL, { headers: getAuthHeader() });
+  return res.data;
 }
 
-// Upload a new file
 export async function uploadFile(formData) {
-  const res = await fetch(`${BASE_URL}/upload`, {
-    method: "POST",
-    body: formData,
+  const res = await axios.post(`${BASE_URL}/upload`, formData, {
+    headers: {
+      ...getAuthHeader(),
+      "Content-Type": "multipart/form-data",
+    },
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message || "Failed to upload file");
-  return data;
+  return res.data;
 }
 
-// Delete a file by server name
 export async function deleteFile(serverName) {
-  const res = await fetch(`${BASE_URL}/upload/${encodeURIComponent(serverName)}`, {
-    method: "DELETE",
+  await axios.delete(`${BASE_URL}/${serverName}`, {
+    headers: getAuthHeader(),
   });
-  if (!res.ok) throw new Error("Failed to delete file");
-  return true;
 }
 
-// Get Download Link
-export function getDownloadLink(serverName) {
-  return `${BASE_URL}/download/${serverName}`;
+export async function getDownloadLink(serverName) {
+  const res = await axios.get(`${BASE_URL}/download/${serverName}`, {
+    headers: getAuthHeader(),
+    responseType: "blob",
+  });
+  return res.data;
 }
 
-// Get Preview Link
-export function getPreviewLink(serverName) {
-  return `${BASE_URL}/preview/${serverName}`;
+export async function getPreviewLink(serverName) {
+  const res = await axios.get(`${BASE_URL}/preview/${serverName}`, {
+    headers: getAuthHeader(),
+    responseType: "blob",
+  });
+  return res.data;
 }

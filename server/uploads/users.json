@@ -1,0 +1,10 @@
+[
+  {
+    "username": "nitish",
+    "passwordHash": "$2b$10$lxM9r6e35yEJRAPnv1xL5eei6D7N1AZkWzpOqSVfJTS7aedCwqSfq"
+  },
+  {
+    "username": "admin",
+    "passwordHash": "$2b$10$b6VFyhPux6Z0fqKjLcsCS.uEMxpfmP05IXLIBmxWbk/rop91ZOhiq"
+  }
+]

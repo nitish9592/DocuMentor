@@ -1,22 +1,14 @@
-import FileUploader from "./components/FileUploader/FileUploader";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import "./styles/index.css";
- // or './App.css'
+import { Outlet, useNavigate } from "react-router-dom";
+import Navbar from "./components/Navbar.jsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-
-
-
-function App() {
+export default function App() {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <FileUploader />
-      <ToastContainer position="top-right" autoClose={2000} />
-     
-
+    <div className="min-h-screen bg-gray-100">
+      <Navbar />
+      <Outlet />
+      <ToastContainer />
     </div>
-    
   );
 }
-
-export default App;
