@@ -4,15 +4,16 @@ import pdfParse from "pdf-parse";
 import axios from "axios";
 import { fileURLToPath } from "url";
 import { readFiles, writeFiles } from "../utils/jsonStorage.js";
-
-// Helper to get __dirname in ES modules
+import dotenv from "dotenv";
+dotenv.config();
+// Helper for ES Modules (__dirname)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const uploadsDir = path.join(__dirname, "../uploads");
 
-// Hugging Face API Key (from .env or hardcoded for now)
-const HF_API_KEY = "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";
+// Hugging Face Summarization API (Ensure you set this in your .env)
+const HF_API_KEY = process.env.HUGGINGFACE_API_KEY;
 const HF_SUMMARIZATION_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn";
 
 // ✅ Upload + Summarize PDF
@@ -24,7 +25,7 @@ export async function uploadFile(req, res) {
   const filePath = path.join(uploadsDir, req.file.filename);
   const pdfBuffer = fs.readFileSync(filePath);
   const pdfData = await pdfParse(pdfBuffer);
-  const text = pdfData.text.slice(0, 2000);  // Limit text size
+  const text = pdfData.text.slice(0, 2000); // Limit text size for summarization
 
   const aiSummary = await getAISummary(text);
 
@@ -42,12 +43,13 @@ export async function uploadFile(req, res) {
   res.json(fileInfo);
 }
 
-// ✅ Generate AI Summary using Hugging Face
+// ✅ Summarize Text Using Hugging Face API
 async function getAISummary(text) {
   try {
+    console.log("Summarizing text...");
     const response = await axios.post(
       HF_SUMMARIZATION_URL,
-      { inputs: text },
+      {inputs: text},
       {
         headers: {
           Authorization: `Bearer ${HF_API_KEY}`,
@@ -55,9 +57,9 @@ async function getAISummary(text) {
         },
       }
     );
-    console.log("Summarizing text:", text);
+
     console.log("AI Summary Response:", response.data);
-    return response.data[0]?.summary_text || "Summary not available.";
+    return response.data[0]?.summary_text?.trim() || "Summary not available.";
   } catch (err) {
     console.error("AI Summary Error:", err.response?.data || err.message);
     return "Failed to generate summary.";
