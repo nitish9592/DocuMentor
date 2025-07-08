@@ -22,6 +22,6 @@
     "multer": "^2.0.1",
     "openai": "^5.8.2",
     "path-to-regexp": "^8.2.0",
-    "pdf-parse": "^1.1.1"
+    "pdf-parse": "git+https://github.com/nitish9592/pdf-parse-fixed.git"
   }
 }
