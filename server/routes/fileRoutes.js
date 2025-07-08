@@ -7,12 +7,14 @@ import {
   deleteFile,
   downloadFile,
   previewFile,
-} from "../controller/fileController.js";
+} from "../controllers/fileController.js";
 
 const router = express.Router();
 
-router.use(protect);  // Protect all file routes
+// ✅ Protect all routes under /api/files
+router.use(protect);
 
+// ✅ File Routes
 router.get("/", fetchFiles);
 router.post("/upload", multerConfig.single("pdf"), uploadFile);
 router.delete("/:file", deleteFile);

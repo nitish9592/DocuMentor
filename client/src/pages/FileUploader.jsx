@@ -8,13 +8,14 @@ import {
 } from "../api/fileApi.js";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
-import { Trash2, Eye, Download, FilePlus } from "lucide-react";
+import { Trash2, Eye, Download, FilePlus, Loader2 } from "lucide-react";
 
 export default function FileUploader() {
   const [files, setFiles] = useState([]);
   const [search, setSearch] = useState("");
   const [expanded, setExpanded] = useState({});
   const [previewFile, setPreviewFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);  // ✅ Loading state added
 
   useEffect(() => {
     const loadFiles = async () => {
@@ -37,12 +38,16 @@ export default function FileUploader() {
 
     const formData = new FormData();
     formData.append("pdf", file);
+
+    setIsLoading(true);  // ✅ Start loading
     try {
       const data = await uploadFile(formData);
       setFiles((prev) => [...prev, data]);
       toast.success("File uploaded successfully!");
-    } catch (err) {
+    } catch {
       toast.error("Upload failed");
+    } finally {
+      setIsLoading(false);  // ✅ Stop loading
     }
   };
 
@@ -59,17 +64,29 @@ export default function FileUploader() {
   return (
     <div className="p-4 max-w-3xl mx-auto">
       <div className="bg-white shadow-md rounded-lg p-6 space-y-4">
-        <label className="flex items-center justify-center border-2 border-dashed border-blue-400 rounded-lg p-6 cursor-pointer hover:bg-blue-50">
+        <label
+          className={`flex items-center justify-center border-2 border-dashed border-blue-400 rounded-lg p-6 cursor-pointer hover:bg-blue-50 ${
+            isLoading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
           <input
             type="file"
             accept="application/pdf"
             onChange={handleFileChange}
             className="hidden"
+            disabled={isLoading}
           />
           <span className="flex items-center gap-2 text-blue-600">
             <FilePlus /> Upload PDF
           </span>
         </label>
+
+        {isLoading && (
+          <div className="flex items-center justify-center gap-2 text-blue-600">
+            <Loader2 className="animate-spin" />
+            <span>Generating summary...</span>
+          </div>
+        )}
 
         <input
           type="text"
@@ -77,6 +94,7 @@ export default function FileUploader() {
           className="border p-2 w-full rounded"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          disabled={isLoading}
         />
 
         {files
@@ -99,6 +117,7 @@ export default function FileUploader() {
                   <button
                     onClick={() => removeFile(file.serverName)}
                     className="text-red-500"
+                    disabled={isLoading}
                   >
                     <Trash2 />
                   </button>
@@ -117,6 +136,7 @@ export default function FileUploader() {
                       }
                     }}
                     className="text-blue-500"
+                    disabled={isLoading}
                   >
                     <Download />
                   </button>
@@ -131,6 +151,7 @@ export default function FileUploader() {
                       }
                     }}
                     className="text-green-500"
+                    disabled={isLoading}
                   >
                     <Eye />
                   </button>

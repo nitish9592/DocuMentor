@@ -6,5 +6,9 @@
   {
     "username": "admin",
     "passwordHash": "$2b$10$b6VFyhPux6Z0fqKjLcsCS.uEMxpfmP05IXLIBmxWbk/rop91ZOhiq"
+  },
+  {
+    "username": "nitishb",
+    "passwordHash": "$2b$10$qqxy6eX9pKCpQa8MzFweLOWVcmCsAITV.j2jEEys6puJkGCw.nAUO"
   }
 ]
