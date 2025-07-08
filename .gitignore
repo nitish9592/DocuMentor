@@ -14,7 +14,8 @@ lerna-debug.log*
 
 # dotenv environment variables
 .env
-.env.*
+
+  
 
 # Build outputs
 /build
