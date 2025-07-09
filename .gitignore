@@ -14,6 +14,7 @@ lerna-debug.log*
 
 # dotenv environment variables
 .env
+.env.production
 
   
 
@@ -23,7 +24,7 @@ lerna-debug.log*
 /out
 
 node_modules
-dist
+
 dist-ssr
 *.local
 
