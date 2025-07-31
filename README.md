@@ -4,7 +4,14 @@ DocuMentor is a web application that allows users to upload, manage, and summari
 
 ---
 
-## 🚀 Features
+##  📽️ Live Demo
+
+👉 [Watch the Demo Video](https://youtu.be/wFTPJlzmIjg)
+
+
+---
+
+🚀 Features
 
 * ✅ **User Authentication** (JWT protected)
 * 📄 **PDF Upload and AI Summary Generation**
@@ -14,13 +21,7 @@ DocuMentor is a web application that allows users to upload, manage, and summari
 * ⚙️ Scalable backend structure with separate controllers, routes, middleware, and models
 * 🌐 Frontend built with React + TailwindCSS + Vite
 
----
-## 📽️ Live Demo
 
-👉 [Watch the Demo Video](https://youtu.be/wFTPJlzmIjg)
-
-
-https://youtu.be/wFTPJlzmIjg
 ---
 
 ## 🧠 Tech Stack
