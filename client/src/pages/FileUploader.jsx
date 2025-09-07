@@ -21,6 +21,7 @@ export default function FileUploader() {
     const loadFiles = async () => {
       try {
         const data = await fetchFiles();
+        console.log("Fetched files:", data); 
         setFiles(data);
       } catch {
         toast.error("Failed to fetch files");
