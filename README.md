@@ -15,12 +15,11 @@ DocuMentor is a web application that allows users to upload, manage, and summari
 * 🌐 Frontend built with React + TailwindCSS + Vite
 
 ---
-## 📽️ Live Demo
-
-👉 [Watch the Demo Video](https://youtu.be/wFTPJlzmIjg)
 
 
-https://youtu.be/wFTPJlzmIjg
+
+> A full walkthrough video demonstration will be added here shortly.
+
 ---
 
 ## 🧠 Tech Stack
