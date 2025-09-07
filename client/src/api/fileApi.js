@@ -1,15 +1,15 @@
 import axios from "axios";
-import { logout } from "../utils/auth";  // ✅ Import logout
+import { logout } from "../utils/auth";  
 
 const BASE_URL = import.meta.env.VITE_API_URL + "/files";
 
-// ✅ Auth Header Helper
+//  Helper
 function getAuthHeader() {
   const token = localStorage.getItem("token");
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-// ✅ Global Response Handler (Auto Logout on 401)
+//(Auto Logout on 401)
 async function handleResponse(promise) {
   try {
     const res = await promise;
@@ -22,14 +22,14 @@ async function handleResponse(promise) {
   }
 }
 
-// ✅ Fetch Files
+
 export async function fetchFiles() {
   return handleResponse(
     axios.get(BASE_URL, { headers: getAuthHeader() })
   );
 }
 
-// ✅ Upload File
+
 export async function uploadFile(formData) {
   return handleResponse(
     axios.post(`${BASE_URL}/upload`, formData, {
@@ -41,7 +41,7 @@ export async function uploadFile(formData) {
   );
 }
 
-// ✅ Delete File
+
 export async function deleteFile(serverName) {
   return handleResponse(
     axios.delete(`${BASE_URL}/${serverName}`, {
@@ -50,7 +50,7 @@ export async function deleteFile(serverName) {
   );
 }
 
-// ✅ Download File
+
 export async function getDownloadLink(serverName) {
   return handleResponse(
     axios.get(`${BASE_URL}/download/${serverName}`, {

@@ -18,15 +18,20 @@ export default function FileUploader() {
   const [isLoading, setIsLoading] = useState(false);  // ✅ Loading state added
 
   useEffect(() => {
-    const loadFiles = async () => {
-      try {
-        const data = await fetchFiles();
-        console.log("Fetched files:", data); 
+      const loadFiles = async () => {
+    try {
+      const data = await fetchFiles();
+      console.log("Fetched files:", data); 
+      if (Array.isArray(data)) {
         setFiles(data);
-      } catch {
-        toast.error("Failed to fetch files");
+      } else {
+        console.error("Expected an array of files, but received:", data);
+        setFiles([]); // or some other default value
       }
-    };
+    } catch {
+      toast.error("Failed to fetch files");
+    }
+  };
     loadFiles();
   }, []);
 
