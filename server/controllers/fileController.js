@@ -1,5 +1,5 @@
-import { existsSync, writeFileSync, readFileSync, readFile, unlink } from "fs";
-import { join, dirname } from "path";
+import { existsSync, writeFileSync, readFileSync, unlink } from "fs";
+import { join, dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 import multer, { diskStorage } from "multer";
 
@@ -21,20 +21,16 @@ const storage = diskStorage({
 });
 export const upload = multer({ storage });
 
-// ✅ Dynamic Import Helper
+// Dynamic PDF Summarizer
 async function summarizePdf(buffer) {
   const { default: pdfParse } = await import("pdf-parse");
   return pdfParse(buffer);
 }
 
-// 🔹 Named Exports
-// 
+// Upload File
 export const uploadFile = async (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ message: "No file uploaded" });
-  }
+  if (!req.file) return res.status(400).json({ message: "No file uploaded" });
 
-  // ✅ Use Multer's actual saved file path
   const filePath = req.file.path;
 
   try {
@@ -42,14 +38,12 @@ export const uploadFile = async (req, res) => {
     const data = await summarizePdf(buffer);
 
     const sentences = data.text.replace(/\n/g, " ").match(/[^.!?]+[.!?]+/g);
-    const summary = sentences
-      ? sentences.slice(0, 3).join(" ").trim()
-      : "No summary available.";
+    const summary = sentences ? sentences.slice(0, 3).join(" ").trim() : "No summary available.";
 
     const fileMeta = {
       originalName: req.file.originalname,
       serverName: req.file.filename,
-      path: filePath, // updated to match Multer path
+      path: resolve(filePath), // store absolute path
       uploadedAt: new Date().toISOString(),
       summary,
     };
@@ -58,49 +52,76 @@ export const uploadFile = async (req, res) => {
     existing.push(fileMeta);
     writeFileSync(metadataPath, JSON.stringify(existing, null, 2));
 
-    res
-      .status(200)
-      .json({ message: "Upload successful", file: req.file.filename, summary });
+    res.status(200).json(fileMeta);
   } catch (err) {
-    console.error(err);
+    console.error("Upload error:", err);
     res.status(500).json({ message: "Failed to process PDF" });
   }
 };
 
+// List Files
 export const listFiles = (req, res) => {
-  readFile(metadataPath, "utf8", (err, data) => {
-    if (err)
-      return res.status(500).json({ message: "Failed to load file metadata" });
-    res.json(JSON.parse(data));
+  try {
+    const data = JSON.parse(readFileSync(metadataPath, "utf8"));
+    const files = data.map(f => ({
+      originalName: f.originalName || "Unknown",
+      serverName: f.serverName || "",
+      uploadedAt: f.uploadedAt || new Date().toISOString(),
+      summary: f.summary || "No summary available",
+      path: f.path ? resolve(f.path) : "",
+    }));
+    res.json(files);
+  } catch (err) {
+    console.error("List files error:", err);
+    res.status(500).json({ message: "Failed to load file metadata" });
+  }
+};
+
+// Download File
+export const downloadFile = (req, res) => {
+  const { file } = req.params;
+  const metadata = JSON.parse(readFileSync(metadataPath));
+  const target = metadata.find(f => f.serverName === file);
+
+  if (!target || !existsSync(target.path)) return res.status(404).send("File not found");
+
+  res.download(target.path, target.originalName, err => {
+    if (err) console.error("Download error:", err);
   });
 };
 
-export const downloadFile = (req, res) => {
-  const { serverName } = req.params;
-  const metadata = JSON.parse(readFileSync(metadataPath));
-  const file = metadata.find((f) => f.serverName === serverName);
-  if (!file) return res.status(404).send("File not found");
-  res.download(join(uploadFolder, serverName), file.originalName);
-};
-
+// Preview File (FIXED)
 export const previewFile = (req, res) => {
-  const { serverName } = req.params;
-  const filePath = join(uploadFolder, serverName);
-  if (!existsSync(filePath)) return res.status(404).send("File not found");
-  res.sendFile(filePath);
+  const { file } = req.params;
+  const metadata = JSON.parse(readFileSync(metadataPath));
+  const target = metadata.find(f => f.serverName === file);
+
+  if (!target || !existsSync(target.path)) return res.status(404).send("File not found");
+
+  // Ensure absolute path
+  const absolutePath = resolve(target.path);
+
+  res.sendFile(absolutePath, err => {
+    if (err) {
+      console.error("Preview error:", err);
+      res.status(500).send("Failed to preview file");
+    }
+  });
 };
 
+// Delete File
 export const deleteFile = (req, res) => {
-  const { filename } = req.params;
-  const filePath = join(uploadFolder, filename);
+  const { file } = req.params;
+  const metadata = JSON.parse(readFileSync(metadataPath));
+  const target = metadata.find(f => f.serverName === file);
 
-  unlink(filePath, (err) => {
-    if (err)
-      return res.status(500).json({ message: "Failed to delete file" });
+  if (!target || !existsSync(target.path)) return res.status(404).json({ message: "File not found" });
 
-    let data = JSON.parse(readFileSync(metadataPath));
-    data = data.filter((file) => file.serverName !== filename);
-    writeFileSync(metadataPath, JSON.stringify(data, null, 2));
+  unlink(target.path, err => {
+    if (err) return res.status(500).json({ message: "Failed to delete file" });
+
+    const updated = metadata.filter(f => f.serverName !== file);
+    writeFileSync(metadataPath, JSON.stringify(updated, null, 2));
 
     res.json({ message: "File deleted successfully" });
   });
