@@ -3,7 +3,7 @@ import { protect } from "../middleware/authMiddleware.js";
 import multerConfig from "../middleware/multerConfig.js";
 import {
   uploadFile,
-  fetchFiles,
+  listFiles,
   deleteFile,
   downloadFile,
   previewFile,
@@ -15,7 +15,7 @@ const router = express.Router();
 router.use(protect);
 
 // ✅ File Routes
-router.get("/", fetchFiles);
+router.get("/", listFiles);
 router.post("/upload", multerConfig.single("pdf"), uploadFile);
 router.delete("/:file", deleteFile);
 router.get("/download/:file", downloadFile);

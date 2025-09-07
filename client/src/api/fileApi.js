@@ -1,7 +1,7 @@
 import axios from "axios";
 import { logout } from "../utils/auth";  
 
-const BASE_URL = import.meta.env.VITE_API_URL + "/files";
+const BASE_URL = import.meta.env.VITE_API_URL + "/api/files";
 
 //  Helper
 function getAuthHeader() {

@@ -28,12 +28,15 @@ async function summarizePdf(buffer) {
 }
 
 // 🔹 Named Exports
+// 
 export const uploadFile = async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "No file uploaded" });
   }
 
-  const filePath = join(uploadFolder, req.file.filename);
+  // ✅ Use Multer's actual saved file path
+  const filePath = req.file.path;
+
   try {
     const buffer = readFileSync(filePath);
     const data = await summarizePdf(buffer);
@@ -46,7 +49,7 @@ export const uploadFile = async (req, res) => {
     const fileMeta = {
       originalName: req.file.originalname,
       serverName: req.file.filename,
-      path: req.file.path,
+      path: filePath, // updated to match Multer path
       uploadedAt: new Date().toISOString(),
       summary,
     };
