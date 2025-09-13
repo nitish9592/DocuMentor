@@ -2,10 +2,10 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-// ✅ Storage Config (Per User Folder)
+// (Per User Folder)
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const username = req.user?.username || "unknown_user";  // Fallback
+    const username = req.user?.username || "unknown_user";  
     const userDir = path.join("uploads", username);
     fs.mkdirSync(userDir, { recursive: true });  // Ensure folder exists
     cb(null, userDir);
@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
   },
 });
 
-// ✅ File Filter (PDF Only)
+//(PDF Only)
 const fileFilter = (req, file, cb) => {
   if (file.mimetype === "application/pdf") {
     cb(null, true);
@@ -26,6 +26,6 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// ✅ Multer Config Export
+
 const multerConfig = multer({ storage, fileFilter });
 export default multerConfig;

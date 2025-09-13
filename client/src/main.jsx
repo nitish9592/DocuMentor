@@ -5,7 +5,7 @@ import App from "./App.jsx";
 import Login from "./pages/Login.jsx";
 import FileUploader from "./pages/FileUploader.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-import "./index.css";  // Tailwind CSS
+import "./index.css";  
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

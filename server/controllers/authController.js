@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 
-// ✅ Register a New User
+
 export async function register(req, res) {
   const { username, password } = req.body;
 
@@ -21,7 +21,7 @@ export async function register(req, res) {
   }
 }
 
-// ✅ Login User
+
 export async function login(req, res) {
   const { username, password } = req.body;
 

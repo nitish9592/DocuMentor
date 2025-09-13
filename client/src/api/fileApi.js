@@ -60,7 +60,7 @@ export async function getDownloadLink(serverName) {
   );
 }
 
-// ✅ Preview File
+// Preview 
 export async function getPreviewLink(serverName) {
   return handleResponse(
     axios.get(`${BASE_URL}/preview/${serverName}`, {

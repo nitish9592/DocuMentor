@@ -15,7 +15,7 @@ export default function FileUploader() {
   const [search, setSearch] = useState("");
   const [expanded, setExpanded] = useState({});
   const [previewFile, setPreviewFile] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);  // ✅ Loading state added
+  const [isLoading, setIsLoading] = useState(false);  
 
   useEffect(() => {
       const loadFiles = async () => {
@@ -26,7 +26,7 @@ export default function FileUploader() {
         setFiles(data);
       } else {
         console.error("Expected an array of files, but received:", data);
-        setFiles([]); // or some other default value
+        setFiles([]); 
       }
     } catch {
       toast.error("Failed to fetch files");
@@ -45,7 +45,7 @@ export default function FileUploader() {
     const formData = new FormData();
     formData.append("pdf", file);
 
-    setIsLoading(true);  // ✅ Start loading
+    setIsLoading(true); 
     try {
       const data = await uploadFile(formData);
       setFiles((prev) => [...prev, data]);
@@ -53,7 +53,7 @@ export default function FileUploader() {
     } catch {
       toast.error("Upload failed");
     } finally {
-      setIsLoading(false);  // ✅ Stop loading
+      setIsLoading(false);  
     }
   };
 

@@ -2,15 +2,15 @@ import { existsSync, writeFileSync, readFileSync, unlink, readFileSync as fsRead
 import { join, dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 import multer, { diskStorage } from "multer";
-import fetch from "node-fetch"; // for HF API
+import fetch from "node-fetch"; // for Hugging Face API
 
-// For __dirname in ESM
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const uploadFolder = join(__dirname, "../uploads");
 const metadataPath = join(uploadFolder, "fileData.json");
 
-// Ensure uploads folder & metadata file exist
+
 if (!existsSync(uploadFolder)) fs.mkdirSync(uploadFolder, { recursive: true });
 if (!existsSync(metadataPath)) writeFileSync(metadataPath, JSON.stringify([]));
 
@@ -21,7 +21,7 @@ const storage = diskStorage({
 });
 export const upload = multer({ storage });
 
-// Dynamic PDF text extraction
+//  text extraction
 async function summarizePdf(buffer) {
   const { default: pdfParse } = await import("pdf-parse");
   return pdfParse(buffer);
@@ -32,7 +32,7 @@ function chunkText(text, maxChars = 1000) {
   return text.match(new RegExp(`.{1,${maxChars}}`, "g")) || [];
 }
 
-// Hugging Face API summarization (no prompt, raw text only)
+
 async function getAISummary(text) {
   const API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn";
   const API_TOKEN = process.env.HF_API_KEY;
@@ -50,7 +50,7 @@ async function getAISummary(text) {
       body: JSON.stringify({
         inputs: chunk, // Send raw text only
         parameters: {
-          max_length: 120, // ~4 lines
+          max_length: 120, // max length for each chunk 
           min_length: 60,
           do_sample: false,
         },
@@ -72,7 +72,7 @@ async function getAISummary(text) {
   return finalSummary;
 }
 
-// Upload File with AI Summary
+// Upload file with ai Summary
 export const uploadFile = async (req, res) => {
   if (!req.file) return res.status(400).json({ message: "No file uploaded" });
 
@@ -111,7 +111,7 @@ export const uploadFile = async (req, res) => {
   }
 };
 
-// List Files
+
 export const listFiles = (req, res) => {
   try {
     const data = JSON.parse(readFileSync(metadataPath));
@@ -129,7 +129,7 @@ export const listFiles = (req, res) => {
   }
 };
 
-// Download File
+
 export const downloadFile = (req, res) => {
   const { file } = req.params;
   try {
@@ -143,7 +143,7 @@ export const downloadFile = (req, res) => {
   }
 };
 
-// Preview File
+
 export const previewFile = (req, res) => {
   const { file } = req.params;
   try {
@@ -157,7 +157,7 @@ export const previewFile = (req, res) => {
   }
 };
 
-// Delete File
+
 export const deleteFile = (req, res) => {
   const { file } = req.params;
   try {
